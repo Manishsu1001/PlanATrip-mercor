@@ -16,7 +16,6 @@ const askGPT = async ( question )=>{
             }]
         }
     )
-    console.log(response.data);
     return response.data.choices[0].message.content;
 }
 
