@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import FirstScreen from './screens/FirstScreen';
 import Loader from './Loader';
+import { BASE_URL } from '../helper/constants';
 
 function Main() {
     const [questions, setQuestions] = useState([]);
@@ -16,7 +17,7 @@ function Main() {
 
     const getStarted = () => {
         setIsLoading(true);
-        axios.get('http://localhost:8300/getQuestions')
+        axios.get(`${BASE_URL}/getQuestions`)
             .then(response => {
                 let newQuestions = response.data.questions;
                 setQuestions(newQuestions.filter(question => question.includes('?')));
@@ -49,7 +50,7 @@ function Main() {
 
     const findDestination = (event) => {
         setIsLoading(true);
-        axios.post('http://localhost:8300/getPlaces',
+        axios.post(`${BASE_URL}/getPlaces`,
             {
                 questions,
                 answers: [...answers, answer]
@@ -76,7 +77,7 @@ function Main() {
             return;
         }
         setIsLoading(true);
-        axios.post('http://localhost:8300/createItinerary',
+        axios.post(`${BASE_URL}/createItinerary`,
             {
                 questions,
                 answers,
