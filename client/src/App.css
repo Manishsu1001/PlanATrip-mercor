@@ -1,38 +1,231 @@
-.App {
+@import url('https://fonts.googleapis.com/css2?family=Bacasime+Antique&family=Belanosima&display=swap');
+.app{
+  width: 80vw;
+  margin: auto;
+}
+
+.header{
+  display: flex;
+  background: linear-gradient(150deg,  rgba(50, 0, 131, 0.844),rgba(144, 17, 106, 0.844)); 
+  padding: 15px;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom: 2px solid white;
+}
+
+.title{
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+  font-family: Belanosima;
+}
+.home{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 90%;
+
+  width: 80vw;
+  height: 90vh;
+  margin: auto;
+  border-bottom-left-radius: 70px;
+  border-bottom-right-radius: 70px; 
+  box-shadow: rgba(0, 0, 0, 0.24) -13px 13px 8px;
+  background: linear-gradient(150deg,  rgb(51, 0, 131),rgb(144, 17, 105));
+  /* transition: 2s ; */
+  /* background-color: rgba(0, 0, 0, 0.208); */
+}
+
+.home>*{
+  /* flex: 1; */
+  display: flex;
+  align-items: center;
+}
+.text{
+  color: white;
+  font-size: 1.9rem;  
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.main-box{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  height: 80vh;
+  margin: 2vh 0;
+  /* box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px; */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.col{
   display: flex;
   flex-direction: column;
+  margin: 15px;
+  padding: 10px;
+  height: 100%;
+  min-width: 300px;
+  box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+}
+.flex-1{
+  flex: 1;
+}
+.flex-2{
+  flex: 1.5;
+}
+.scroll{
+  overflow-y: scroll;
+}
+.center-alligned{
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  padding: 0px 50px;
+
+}
+
+.place-card{
+  align-items: center;
+  border: 2px solid rebeccapurple;
+  border-radius: 15px;
+  /* transition: 1.7s; */
+  background-color: white;
+}
+
+.place-card:hover,.selected{
+  background: linear-gradient(150deg,  rgb(51, 0, 131),rgb(144, 17, 105));
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+
+.loader{
+  z-index: 9999;
+  position: fixed;
+  top:0;
+  left:0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(71, 146, 212, 0.307);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  background: radial-gradient(circle at center, black, #00000045);
+  color: white;
+  font-weight: bolder;
+  transition: 0.5s;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+
+.text-white{
+  color:white
+}
+
+@media (max-width: 852px) {
+  .main-box{
+    flex-direction: column;
+    min-height: 150vh;
+  } 
+  .center-alligned{
+    min-height: 100vh;
   }
-  to {
-    transform: rotate(360deg);
+  .app{
+    width: 90%;
   }
+
+  .home{
+    width: 90vw;
+  }
+  
+}
+
+.main-page{
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn{
+  background: none;
+  color: white;
+  border: 2px solid white;
+  padding: 1.4rem 2.4rem;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.btn:hover{
+  background-color: white;
+  color: rebeccapurple;
+}
+
+.w-100{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  /* margin: auto; */
+}
+
+input{
+  background-color: white;
+  color: black;
+  padding: 1.2rem;
+  text-align: center;
+  width: 80%;
+  font-size: 1.2rem;
+}
+
+.que-text{
+  width: 80%;
+
+  text-align: justify;
+}
+
+.dots{
+  display: flex;
+  flex: row;
+}
+
+.dot {
+  background-color: white;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  animation: dots;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+}
+
+.dot-continer{
+  height: 30px;
+  width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes dots {
+  0%{
+    height: 10px;
+    width: 10px;
+  }
+  50%{
+    height: 20px;
+    width: 20px;
+  }100%{
+    height: 10px;
+    width: 10px;
+  } 
+}
+
+#dot1{
+  animation-delay: -0.75s;
+}
+#dot2{
+  animation-delay: -0.375s;
 }

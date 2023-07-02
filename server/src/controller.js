@@ -1,4 +1,4 @@
-const { askGPT } = require('./helper');
+const { askGPT, getAdditionalInfo } = require('./helper');
 const { NUMBER_OF_QUESTIONS, NUMBER_OF_PLACES } = require('./utils');
 
 
@@ -13,8 +13,11 @@ const getQuestions = async (req, res) => {
         const questionChatGPT = `Provide me an array of ${NUMBER_OF_QUESTIONS} questions which can be asked to a person to know the best locations to visit based on his mood and interests`;
 
         const response = await askGPT(questionChatGPT);
-        const questions = response.split('\n');
-
+        let questions = response.split('\n');
+        questions = questions.filter(question => question.includes('?'));
+        questions.push(`${questions.length + 1}. What is your current Location?`);
+        questions.push(`${questions.length + 1}. How long can the trip be?`);
+        questions.push(`${questions.length + 1}. Any other additional comments to keep in mind while searching for places?`);
         return res.status(200).json({
             status: true,
             questions: questions
@@ -29,18 +32,23 @@ const getQuestions = async (req, res) => {
 
 const getPlaces = async (req, res) => {
     try {
-        const { questions, answers, location, days, additionalComments } = req.body;
+        const { questions, answers } = req.body;
+        const {updatedQuestions,updatedAnswers, days, location, additionalComments} = getAdditionalInfo(questions,answers);
         const questionChatGPT =
             `For the below mentioned questions: 
-            ${questions}
+            ${updatedQuestions}
             These are the respective answers of the above questions:
-            ${answers},
+            ${updatedAnswers},
             Based on the above questions and answers, Provide me an array of ${NUMBER_OF_PLACES} destinations I can visit for ${days} days with keys as 'destination' and 'description'. I live in ${location}.
-            ${additionalComments.length ? additionalComments : ''}
+            ${additionalComments}
             `
         const response = await askGPT(questionChatGPT);
-
-        const places = JSON.parse(await askGPT(`${response}\n create the above text in form of an array of objects `));
+        let structuredResponse = await askGPT(`${response}\n  create the above text in form of an array of objects`);
+        const startIndex = structuredResponse.indexOf("[");
+        const endIndex = structuredResponse.indexOf("]"); 
+        structuredResponse = structuredResponse.slice(startIndex,endIndex+1);
+        console.log(structuredResponse);
+        const places = JSON.parse(structuredResponse);
 
         return res.status(200).json({
             status: true,
@@ -57,9 +65,10 @@ const getPlaces = async (req, res) => {
 
 const createItinerary = async (req, res) => {
     try {
-        const { answers, place, days, additionalComments } = req.body;
+        const {questions, answers, place } = req.body;
+        const {updatedQuestions,updatedAnswers,days,additionalComments} = getAdditionalInfo(questions,answers);
         let answer_string = "";
-        answers.forEach(answer => answer_string+=answer+'\n');
+        answers.forEach(answer => answer_string += answer + '\n');
         questionChatGPT = `
             Create an itinerary for me to travel ${place} for ${days} days based on the below statements:
             ${answer_string}\n
@@ -67,7 +76,8 @@ const createItinerary = async (req, res) => {
             Describe the activities in 100-200 words.
         `
         const response = await askGPT(questionChatGPT);
-        const itinerary = JSON.parse(await askGPT(`
+        
+        let structuredResponse = await askGPT(`
         ${response}\n
         Convert the above text in the form of array of objects in the following format:
         [{
@@ -81,7 +91,11 @@ const createItinerary = async (req, res) => {
             ] 
         }]
         
-        `));
+        `);
+        const startIndex = structuredResponse.indexOf("[");
+        const endIndex = structuredResponse.lastIndexOf("]"); 
+        structuredResponse = structuredResponse.slice(startIndex,endIndex+1);
+        const itinerary = JSON.parse(structuredResponse);
 
         return res.status(200).json({
             status: true,
@@ -93,7 +107,7 @@ const createItinerary = async (req, res) => {
             message: e.message
         })
     }
-    
+
 }
 
 
